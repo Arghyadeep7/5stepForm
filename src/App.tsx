@@ -1,25 +1,34 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Routes, Route, Navigate } from "react-router-dom";
+
+import { useAppSelector } from "./store/Hook";
+
+import Login from "./components/Login";
+import Forgot from "./components/Forgot";
+import MultiStep from "./components/MultiStep/MultiStep";
+import Submitted from "./components/MultiStep/Submitted";
 
 function App() {
+
+  const loggedIn = useAppSelector(state => state.profile.loggedIn);
+  
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Routes>
+      <Route path="/" element={
+        !loggedIn? <Login /> : <Navigate replace to="/multistep" /> }
+      />
+      <Route path="/multistep" element={
+        loggedIn? <MultiStep /> : <Navigate replace to="/" /> }
+      /> 
+      <Route path="/forgot" element={
+        !loggedIn? <Forgot /> : <Navigate replace to="/multistep" /> }
+      />
+      <Route path="/submitted" element={
+        loggedIn? <Submitted /> : <Navigate replace to="/" /> } 
+      />
+      <Route path="*" element={
+        loggedIn? <Navigate replace to="/" /> : <Navigate replace to="/multistep" /> } 
+      />
+    </Routes>
   );
 }
 
