@@ -31,7 +31,7 @@ const Step5: React.FC<{prev: ({}) => void, submit:() => void, data: any}> = (pro
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": "Bearer eyJhbGciOiJBMjU2S1ciLCJlbmMiOiJBMjU2Q0JDLUhTNTEyIiwiemlwIjoiREVGIn0.r43LaY20ywitt_QiTkCt4mPOKAQjaxcCzZA2c5KEZoH-YfKeVoz4n2Svu1HzREoDh7owsAZPeGYg0QBf8OEImdGuEBxIJws2.ZfK_D1uP3WFuD93lPZC6tg.5o87pszKs3EgYFBwK0K32as_JWyAOARUphfR5rutaLffG145QTtIuV3X_V4XDQoWTNYLLa7pw4s-LNz8r0DJHrhxuqRDQiyPYKbKsPvIIFY0v6ZP2ESTmyaFCNGFQ-GDn_991pjn8iSwkW3RgPlzSqqpLzkG7mYkzh0zLF3Am_w.1oqmlN2DJLjy-7H1FXu8SgIL4svH0DBf9ApKUzQ7xis"
+                "Authorization": `Bearer ${token}`
             },
             body: JSON.stringify(data)
         }).then((res) => res.json());
@@ -119,7 +119,13 @@ const Step5: React.FC<{prev: ({}) => void, submit:() => void, data: any}> = (pro
 
             <Row className="mt-4 mb-4">
                 <Col md={7} className="m-auto text-center mb-5">
-                    <h5>Geolocated at: <i className="fa-solid fa-location-dot">&nbsp;{geolocation}</i></h5>
+                    { (geolocation === "Location data denied!" || geolocation === "Geolocation not supported!") && 
+                        <h4 style={{color:"red"}}>{geolocation.toUpperCase()}</h4>
+                    }
+                    {
+                        geolocation !== "Location data denied!" && geolocation !== "Geolocation not supported!" &&
+                        <h5>Geolocated at: <i className="fa-solid fa-location-dot">&nbsp;{geolocation}</i></h5>
+                    }
                 </Col>
                 <Col md={5} className="m-auto mb-5">
                     <div className="d-flex justify-content-evenly">

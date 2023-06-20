@@ -11,7 +11,7 @@ const Step4: React.FC<{next: ({}) => void, prev: ({}) => void, data: any}> = (pr
 
   const data = props.data;
 
-  const [geolocation, setLocation] = useState<string>(data.geolocation?data.geolocation:"Loading...");
+  const [geolocation, setLocation] = useState<string>("Loading...");
 
   const [multi_ups1, setFile1] = useState<{name: string, bin:string}>(data.multi_ups1?data.multi_ups1:F);
   const [multi_ups2, setFile2] = useState<{name: string, bin:string}>(data.multi_ups2?data.multi_ups2:F);
@@ -22,8 +22,6 @@ const Step4: React.FC<{next: ({}) => void, prev: ({}) => void, data: any}> = (pr
   const [count, setCount] = useState<number>(0);
 
   useEffect(() => {
-
-    setLoading(true);
 
     if (navigator.geolocation) {
 
@@ -39,13 +37,13 @@ const Step4: React.FC<{next: ({}) => void, prev: ({}) => void, data: any}> = (pr
                                   .then(response => response.json());
 
           setLocation(response.name + ", " + response.sys.country);
+        },() => {
+          setLocation("Location data denied!");
         }
       );
     } else {
-      setLocation("Location data denined!");
+      setLocation("Geolocation not supported!");
     }
-
-    setLoading(false);
 
     let c = 0;
 
@@ -197,10 +195,11 @@ const Step4: React.FC<{next: ({}) => void, prev: ({}) => void, data: any}> = (pr
       
 
       <div className="d-flex justify-content-evenly mt-4">
-        <Button variant="outline-danger" size="lg" onClick={prevHandler} disabled={loading}>
+        <Button variant="outline-danger" size="lg" onClick={prevHandler} disabled={loading || geolocation==="Loading..."}>
           <i className="fa-solid fa-backward"> {loading?"Loading...":"PREV"}</i>
         </Button>
-        <Button variant="outline-primary" size="lg" disabled={loading || count===0} onClick={nextHandler}>
+        <Button variant="outline-primary" size="lg" disabled={loading || count===0 || geolocation==="Loading..."} 
+          onClick={nextHandler}>
           <i className="fa-solid fa-forward"> {loading?"Loading...":"NEXT"}</i>
         </Button>
       </div>
